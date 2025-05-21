@@ -6,7 +6,7 @@
 
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
-// LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL); // 使用完整路径
+LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL); // 使用完整路径
 
 #include <zmk/display.h>
 #include <zmk/display/widgets/layer_status.h>

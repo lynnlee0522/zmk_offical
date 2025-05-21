@@ -22,7 +22,7 @@
   "clangd.fallbackFlags": [
     "-I${workspaceFolder}/zephyr/include",
     "-I${workspaceFolder}/app/include",
-    "-I${workspaceFolder}/app/include/zmk/display.h",
+    "-I${workspaceFolder}/app/include/zmk",
     "-I${workspaceFolder}/modules/lib/gui/lvgl"
   ]
 }
