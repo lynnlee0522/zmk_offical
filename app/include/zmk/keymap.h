@@ -7,6 +7,7 @@
 #pragma once
 
 #include <zmk/events/position_state_changed.h>
+#include <stddef.h> 
 
 #define ZMK_LAYER_CHILD_LEN_PLUS_ONE(node) 1 +
 #define ZMK_KEYMAP_LAYERS_LEN                                                                      \
@@ -43,6 +44,18 @@ int zmk_keymap_layer_deactivate(zmk_keymap_layer_id_t layer);
 int zmk_keymap_layer_toggle(zmk_keymap_layer_id_t layer);
 int zmk_keymap_layer_to(zmk_keymap_layer_id_t layer);
 const char *zmk_keymap_layer_name(zmk_keymap_layer_id_t layer);
+
+struct zmk_keymap_layer_info {
+    zmk_keymap_layer_id_t id;
+    const char *label;
+};
+
+struct zmk_keymap_layers_info {
+    size_t effective_layer_count;
+    struct zmk_keymap_layer_info keymap_layers[ZMK_KEYMAP_LAYERS_LEN];
+};
+
+struct zmk_keymap_layers_info zmk_keymap_get_all_layers_info(void);
 
 const struct zmk_behavior_binding *zmk_keymap_get_layer_binding_at_idx(zmk_keymap_layer_id_t layer,
                                                                        uint8_t binding_idx);

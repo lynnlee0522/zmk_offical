@@ -18,5 +18,11 @@
   "[css][json][jsonc][html][markdown][yaml]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "clangd.fallbackFlags": [
+    "-I${workspaceFolder}/zephyr/include",
+    "-I${workspaceFolder}/app/include",
+    "-I${workspaceFolder}/app/include/zmk/display.h",
+    "-I${workspaceFolder}/modules/lib/gui/lvgl"
+  ]
 }

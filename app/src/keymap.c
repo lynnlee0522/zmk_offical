@@ -11,6 +11,7 @@
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 #include <zmk/stdlib.h>
+#include <stddef.h> 
 #include <zmk/behavior.h>
 #include <zmk/keymap.h>
 #include <zmk/physical_layouts.h>
@@ -195,6 +196,21 @@ zmk_keymap_layer_index_t zmk_keymap_highest_layer_active(void) {
     }
 
     return LAYER_ID_TO_INDEX(zmk_keymap_layer_default());
+}
+
+struct zmk_keymap_layers_info zmk_keymap_get_all_layers_info(void) {
+    struct zmk_keymap_layers_info info = {0};
+    size_t count = 0;
+    for (int i = 0; i < ZMK_KEYMAP_LAYERS_LEN; i++) {
+        zmk_keymap_layer_id_t id = LAYER_INDEX_TO_ID(i);
+        if (id == ZMK_KEYMAP_LAYER_ID_INVAL)
+            continue;
+        info.keymap_layers[count].id = id;
+        info.keymap_layers[count].label = zmk_keymap_layer_name(id);
+        count++;
+    }
+    info.effective_layer_count = count;
+    return info;
 }
 
 int zmk_keymap_layer_activate(zmk_keymap_layer_id_t layer) { return set_layer_state(layer, true); };
