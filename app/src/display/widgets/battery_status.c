@@ -7,7 +7,7 @@
 #include <zephyr/kernel.h>
 
 #include <zephyr/logging/log.h>
-LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
+// LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 #include <zmk/battery.h>
 #include <zmk/display.h>
