@@ -60,9 +60,9 @@ void set_wpm_symbol(lv_obj_t *arc, struct wpm_status_state state) {
     // 设置标签样式
     lv_obj_set_style_text_font(label, &lv_font_montserrat_12, 0);
     lv_obj_set_style_text_color(label, lv_color_make(255, 255, 255), 0);
+    lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, 0);
 
-    // 将标签居中显示在圆弧中心
-    lv_obj_center(label);
+    // lv_obj_center(label);
 }
 
 void wpm_status_update_cb(struct wpm_status_state state) {
@@ -76,7 +76,6 @@ ZMK_SUBSCRIPTION(widget_wpm_status, zmk_wpm_state_changed);
 
 int zmk_widget_wpm_status_init(struct zmk_widget_wpm_status *widget, lv_obj_t *parent) {
     widget->obj = lv_arc_create(parent);
-    lv_obj_set_style_text_align(widget->obj, LV_TEXT_ALIGN_CENTER, 0);
 
     sys_slist_append(&widgets, &widget->node);
     widget_wpm_status_init();

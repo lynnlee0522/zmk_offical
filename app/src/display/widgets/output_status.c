@@ -35,27 +35,39 @@ static struct output_status_state get_state(const zmk_event_t *_eh) {
 }
 
 static void set_status_symbol(lv_obj_t *label, struct output_status_state state) {
-    char text[20] = {};
+    lv_label_set_recolor(label, true);
+    char text[40] = {};
 
     switch (state.selected_endpoint.transport) {
     case ZMK_TRANSPORT_USB:
-        strcat(text, LV_SYMBOL_USB);
+        snprintf(text, sizeof(text), "#ffffff " LV_SYMBOL_USB "#");
         break;
     case ZMK_TRANSPORT_BLE:
         if (state.active_profile_bonded) {
             if (state.active_profile_connected) {
-                snprintf(text, sizeof(text), LV_SYMBOL_WIFI " %i " LV_SYMBOL_OK,
+                // 已配对且已连接
+                snprintf(text, sizeof(text),
+                         "#ffffff " LV_SYMBOL_BLUETOOTH " %i " LV_SYMBOL_COPY " #"
+                         "#00ff00 " LV_SYMBOL_OK " #",
                          state.selected_endpoint.ble.profile_index + 1);
             } else {
-                snprintf(text, sizeof(text), LV_SYMBOL_WIFI " %i " LV_SYMBOL_CLOSE,
+                // 已配对但未连接
+                snprintf(text, sizeof(text),
+                         "#ffffff " LV_SYMBOL_BLUETOOTH " %i " LV_SYMBOL_COPY " #"
+                         "#ff0000 " LV_SYMBOL_CLOSE " #",
                          state.selected_endpoint.ble.profile_index + 1);
             }
         } else {
-            snprintf(text, sizeof(text), LV_SYMBOL_WIFI " %i " LV_SYMBOL_SETTINGS,
+            // 未配对
+            snprintf(text, sizeof(text), "#ffffff " LV_SYMBOL_BLUETOOTH " %i #",
                      state.selected_endpoint.ble.profile_index + 1);
         }
         break;
     }
+
+    // 设置text的颜色为白色，字体大小为22
+    lv_obj_set_style_text_font(label, &lv_font_montserrat_22, LV_PART_MAIN);
+    lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
 
     lv_label_set_text(label, text);
 }

@@ -26,11 +26,15 @@ static struct peripheral_status_state get_state(const zmk_event_t *_eh) {
 }
 
 static void set_status_symbol(lv_obj_t *label, struct peripheral_status_state state) {
-    const char *text =
-        state.connected ? (LV_SYMBOL_WIFI " " LV_SYMBOL_OK) : (LV_SYMBOL_WIFI " " LV_SYMBOL_CLOSE);
+    const char *text = state.connected
+                           ? (LV_SYMBOL_KEYBOARD " " LV_SYMBOL_MINUS " " LV_SYMBOL_KEYBOARD)
+                           : (LV_SYMBOL_KEYBOARD " " LV_SYMBOL_MINUS " " LV_SYMBOL_KEYBOARD);
 
-    LOG_DBG("connected? %s", state.connected ? "true" : "false");
+    LOG_ERR("peripheral connected? %s", state.connected ? "true" : "false");
+
     lv_label_set_text(label, text);
+    // text的颜色为白色
+    lv_obj_set_style_text_color(label, lv_color_hex(0xffffff), LV_PART_MAIN);
 }
 
 static void output_status_update_cb(struct peripheral_status_state state) {
