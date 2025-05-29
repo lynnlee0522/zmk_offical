@@ -29,7 +29,12 @@ struct battery_status_state {
 #endif
 };
 
-struct battery_status_state battery_objects[ZMK_SPLIT_CENTRAL_PERIPHERAL_COUNT];
+#define ZMK_SPLIT_CENTRAL_COUNT 1
+
+struct battery_status_state
+    battery_objects[ZMK_SPLIT_CENTRAL_PERIPHERAL_COUNT + ZMK_SPLIT_CENTRAL_COUNT] = {
+        [0] = {.is_peripheral = false, .source = 0, .level = 0},
+        [1] = {.is_peripheral = true, .source = 0, .level = 0}};
 
 static void set_battery_symbol(lv_obj_t *label, struct battery_status_state state) {
     // 展示battery_objects的状态
@@ -39,9 +44,8 @@ static void set_battery_symbol(lv_obj_t *label, struct battery_status_state stat
     // 启用富文本着色
     lv_label_set_recolor(label, true);
 
-    for (int i = 0; i <= ZMK_SPLIT_CENTRAL_PERIPHERAL_COUNT; i++) {
+    for (int i = 0; i < ZMK_SPLIT_CENTRAL_PERIPHERAL_COUNT + ZMK_SPLIT_CENTRAL_COUNT; i++) {
         state = battery_objects[i];
-
         // 如果是外设且断联（比如level==0），则跳过
         if (state.is_peripheral && state.level == 0) {
             continue;
@@ -83,8 +87,7 @@ static void set_battery_symbol(lv_obj_t *label, struct battery_status_state stat
 }
 
 void battery_status_update_cb(struct battery_status_state state) {
-
-    int idx = state.is_peripheral ? (state.source + 1) : 0;
+    int idx = state.is_peripheral ? 1 : 0;
     battery_objects[idx] = state; // 存储最新状态
 
     struct zmk_widget_battery_status *widget;
@@ -97,7 +100,7 @@ static struct battery_status_state peripheral_battery_status_get_state(const zmk
 
     return (struct battery_status_state){
         .is_peripheral = true,
-        .source = ev->source,
+        .source = ev->source + ZMK_SPLIT_CENTRAL_COUNT,
         .level = ev->state_of_charge,
     };
 }
