@@ -19,6 +19,11 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #include <zmk/endpoints.h>
 static sys_slist_t widgets = SYS_SLIST_STATIC_INIT(&widgets);
 
+LV_FONT_DECLARE(lv_custom_symbol);
+
+#define LV_SYMBOL_LOCK "\xEF\x80\xA3"
+#define LV_SYMBOL_UNLOCK "\xEF\x8F\x81"
+
 struct output_status_state {
     struct zmk_endpoint_instance selected_endpoint;
     bool active_profile_connected;
@@ -34,6 +39,10 @@ static struct output_status_state get_state(const zmk_event_t *_eh) {
 }
 
 static void set_status_symbol(lv_obj_t *label, struct output_status_state state) {
+    // 设置label使用自定义符号字体
+    // LV_FONT_DECLARE(lv_symbol_lock);
+    // LV_FONT_DECLARE(lv_symbol_unlock);
+
     lv_label_set_recolor(label, true);
     char text[40] = {};
 
@@ -46,26 +55,28 @@ static void set_status_symbol(lv_obj_t *label, struct output_status_state state)
             if (state.active_profile_connected) {
                 // 已配对且已连接
                 snprintf(text, sizeof(text),
-                         "#ffffff " LV_SYMBOL_BLUETOOTH " %i " LV_SYMBOL_COPY " #"
+                         "#ffffff " LV_SYMBOL_BLUETOOTH " %i " LV_SYMBOL_LOCK " #"
                          "#00ff00 " LV_SYMBOL_OK " #",
                          state.selected_endpoint.ble.profile_index + 1);
             } else {
                 // 已配对但未连接
                 snprintf(text, sizeof(text),
-                         "#ffffff " LV_SYMBOL_BLUETOOTH " %i " LV_SYMBOL_COPY " #"
+                         "#ffffff " LV_SYMBOL_BLUETOOTH " %i " LV_SYMBOL_LOCK " #"
                          "#ff0000 " LV_SYMBOL_CLOSE " #",
                          state.selected_endpoint.ble.profile_index + 1);
             }
         } else {
             // 未配对
-            snprintf(text, sizeof(text), "#ffffff " LV_SYMBOL_BLUETOOTH " %i #",
+            snprintf(text, sizeof(text),
+                     "#ffffff " LV_SYMBOL_BLUETOOTH " %i " LV_SYMBOL_UNLOCK " #",
                      state.selected_endpoint.ble.profile_index + 1);
         }
         break;
     }
 
     // 设置text的颜色为白色，字体大小为22
-    lv_obj_set_style_text_font(label, &lv_font_montserrat_22, LV_PART_MAIN);
+    // lv_obj_set_style_text_font(label, &lv_font_montserrat_20, LV_PART_MAIN);
+    lv_obj_set_style_text_font(label, &lv_custom_symbol, LV_PART_MAIN);
     lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
 
     lv_label_set_text(label, text);
